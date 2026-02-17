@@ -277,3 +277,20 @@ class TestCounterEndpoints:
         assert response.status_code == HTTPStatus.BAD_REQUEST
 
         # TODO: Add an assertion to verify the error message specifically says 'Invalid counter name'S
+
+    # ===========================
+    # Test: Validate error message when there is a non-existent counter
+    # Author: Connor Palmira
+    # Modification: Ensure error message is specific.
+    # ===========================
+    def test_set_nonexistent_counter_returns_not_found_message(self, client):
+        """It should return a clear error message when setting a non-existent counter"""
+
+        response = client.put('/counters/ghost/set/5')
+
+        assert response.status_code == HTTPStatus.NOT_FOUND
+
+        data = response.get_json()
+
+        assert "error" in data
+        assert "Counter 'ghost' not found" in data["error"]
